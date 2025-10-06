@@ -1,5 +1,6 @@
 # 💼 Suivi des Charges Externes – PME Industrielle
-##🎯 Objectif du projet
+
+## 🎯 Objectif du projet
 
 
 Mettre en place un outil de pilotage comptable et financier sous Power BI, dédié au suivi des charges externes, à leur évolution dans le temps et à leur répartition par catégorie, fournisseur et compte comptable.
