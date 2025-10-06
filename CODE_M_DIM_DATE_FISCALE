@@ -1,0 +1,64 @@
+let
+    Source = "",
+    StartDate = #date(2023,3,21),
+    EndDate = #date(2026,4,1),
+    CreateListDays = List.Dates(StartDate, Number.From(EndDate - StartDate) +1, #duration(1,0,0,0)),
+    #"Converti en table" = Table.FromList(CreateListDays, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Colonnes renommées" = Table.RenameColumns(#"Converti en table",{{"Column1", "Date"}}),
+    #"Type modifié" = Table.TransformColumnTypes(#"Colonnes renommées",{{"Date", type date}}),
+    #"Année insérée" = Table.AddColumn(#"Type modifié", "Annee", each Date.Year([Date]), Int64.Type),
+    #"Mois inséré" = Table.AddColumn(#"Année insérée", "Mois_Num", each Date.Month([Date]), Int64.Type),
+    #"Nom du mois inséré" = Table.AddColumn(#"Mois inséré", "Mois_Nom", each Date.MonthName([Date], "fr-FR"), type text),
+    #"Semaine de l'année insérée" = Table.AddColumn(#"Nom du mois inséré", "Semaine_Num", each Date.WeekOfYear([Date]), Int64.Type),
+    #"Trimestre inséré" = Table.AddColumn(#"Semaine de l'année insérée", "Trimestre", each Date.QuarterOfYear([Date]), Int64.Type),
+    #"Colonne fusionnée insérée" = Table.AddColumn(#"Trimestre inséré", "Trimestre_Civil", each Text.Combine({"T", Text.From([Trimestre], "fr-FR")}), type text),
+    #"Colonnes Trimestre supprimée" = Table.RemoveColumns(#"Colonne fusionnée insérée",{"Trimestre"}),
+    #"Colonne Année Fiscale Libellé" = Table.AddColumn(
+    #"Colonnes Trimestre supprimée",
+    "Annee_Fiscale_Libelle",
+    each 
+        if Date.Month([Date]) >= 4 
+        then Text.From(Date.Year([Date])) & "/" & Text.From(Date.Year([Date]) + 1)
+        else Text.From(Date.Year([Date]) - 1) & "/" & Text.From(Date.Year([Date])),
+        type text
+),
+    #"Colonne Année Mois" = Table.AddColumn(#"Colonne Année Fiscale Libellé", "Annee_Mois", each
+Text.Combine({Text.From([Annee]), Text.PadStart(Text.From([Mois_Num]), 2, "0")},"-"), 
+type text
+),
+    #"Colonne Année Mois Key" = Table.AddColumn(#"Colonne Année Mois", "Annee_Mois_Key", each
+Number.FromText(
+    Text.From([Annee]) & Text.PadStart(Text.From([Mois_Num]), 2, "0")
+),
+Int64.Type
+),
+    #"Colonne Année Fiscale Num" = Table.AddColumn(#"Colonne Année Mois Key", "Annee_Fiscale_Num", each
+if [Mois_Num] >= 4 then [Annee] +1 else [Annee],
+Int64.Type
+),
+    #"Colonne Mois Fiscal" = Table.AddColumn(#"Colonne Année Fiscale Num", "Mois_Fiscal", each
+if [Mois_Num] >= 4 then [Mois_Num] -3 else [Mois_Num] +9,
+Int64.Type
+),
+    #"Colonne Annee Mois Fiscale Key" = Table.AddColumn(
+    #"Colonne Mois Fiscal",
+    "Annee_Mois_Fiscale_Key",
+    each [Annee_Fiscale_Num] * 100 + [Mois_Fiscal],
+    Int64.Type
+),
+    #"Colonne Annee_Fiscale_Debut_Num" = Table.AddColumn(#"Colonne Annee Mois Fiscale Key", "Annee_Fiscale_Debut_Num", each [Annee_Fiscale_Num] - 1, Int64.Type),
+    #"Colonne FY_StartDate" = Table.AddColumn(#"Colonne Annee_Fiscale_Debut_Num", "FY_StartDate",
+        each #date([Annee_Fiscale_Debut_Num], 4, 1), type date),
+    #"Colonne FY_EndDate" = Table.AddColumn(#"Colonne FY_StartDate", "FY_EndDate",
+        each #date([Annee_Fiscale_Debut_Num]+1, 3, 31), type date),
+    #"Texte en majuscules" = Table.TransformColumns(#"Colonne FY_EndDate",{{"Mois_Nom", Text.Upper, type text}}),
+    #"Colonne Trimestre_Fiscal" = Table.AddColumn(#"Texte en majuscules", "Trimestre_Fiscal", each
+if [Trimestre_Civil] = "T2" then "T1 Fiscal"
+else if [Trimestre_Civil] = "T3" then "T2 Fiscal"
+else if [Trimestre_Civil] = "T4" then "T3 Fiscal"
+else if [Trimestre_Civil] = "T1" then "T4 FIscal"
+else null,
+type text
+)
+in
+    #"Colonne Trimestre_Fiscal"
