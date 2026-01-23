@@ -33,9 +33,6 @@ Le projet ne se limite pas à la visualisation :
 Le modèle repose sur la logique suivante, propre à Sage :
 EC PIECE → comptes de charges (6xx) → compte fournisseur (401)
 
-yaml
-Copier le code
-
 Le rattachement fournisseur est effectué **exclusivement via les écritures 401**, considérées comme la source de vérité.
 
 ---
