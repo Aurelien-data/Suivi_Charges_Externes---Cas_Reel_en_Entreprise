@@ -31,40 +31,10 @@ Le projet ne se limite pas à la visualisation :
 ### 🔹 Respect strict de la logique Sage
 
 Le modèle repose sur la logique suivante, propre à Sage :
-# 💼 Suivi des Charges Externes & Achats MP – PME Industrielle
-
-## 🎯 Objectif du projet
-
-Mettre en place un outil de pilotage financier fiable sous **Power BI** permettant :
-- le suivi des **charges externes** (comptes 6xx)
-- l’analyse détaillée des **achats de matières premières, approvisionnements et marchandises** (601 / 602 / 607)
-- une restitution cohérente avec les **données comptables Sage 100**
-
-L’objectif principal est de garantir une **lecture fidèle des montants comptables**, tout en apportant une capacité d’analyse avancée par catégorie, fournisseur et période.
-
----
-
-## 🧠 Contexte & enjeux métier
-
-Ce projet a été réalisé dans le cadre de la modernisation du pilotage financier d’une **PME industrielle**.
-
-### Problématiques initiales :
-- Difficulté à analyser les charges par fournisseur de façon fiable
-- Écarts inexpliqués entre les exports Excel et les états Sage
-- Manque de traçabilité sur certaines écritures comptables complexes
-- Besoin de distinguer les **pièces comptables fiables** des cas atypiques
-
-Le projet ne se limite pas à la visualisation :
-👉 il vise avant tout la **fiabilisation de la donnée comptable**.
-
----
-
-## 🧩 Approche retenue
-
-### 🔹 Respect strict de la logique Sage
-
-Le modèle repose sur la logique suivante, propre à Sage :
 EC PIECE → comptes de charges (6xx) → compte fournisseur (401)
+
+yaml
+Copier le code
 
 Le rattachement fournisseur est effectué **exclusivement via les écritures 401**, considérées comme la source de vérité.
 
