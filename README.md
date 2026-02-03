@@ -65,7 +65,7 @@ Ces tables ne servent **pas au calcul**, mais à :
 
 - Suivi des **charges externes** par période, catégorie et compte
 - Analyse détaillée des **achats MP (601 / 602 / 607)** par fournisseur
-- Comparaison N vs N-1 (montants et variations)
+- Comparaison N vs N-1 & N-2 (montants et variations)
 - Fiabilité des montants **au centime près** vs Sage et fichiers sources
 - Identification explicite des pièces comptables non fiables
 - Séparation claire entre calculs et contrôles
