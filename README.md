@@ -5,6 +5,7 @@ Cas réel – PME industrielle (Sage 100 → Power BI)
 # 🎯 Objectif du projet
 
 Concevoir un modèle Power BI fiable permettant :
+
 Le suivi des charges externes (6xx)
 
 L’analyse détaillée des achats MP / approvisionnements (601 / 602 / 607)
