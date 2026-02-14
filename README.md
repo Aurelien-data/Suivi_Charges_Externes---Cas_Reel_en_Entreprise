@@ -13,8 +13,6 @@ La restitution cohérente avec les données comptables Sage 100
 
 Le pilotage N vs N-1 / N-2, à date ou en année complète
 
----
-
 L’objectif n’était pas uniquement de produire des visualisations, mais de :
 
 # 🔎 Fiabiliser la donnée comptable avant toute analyse.
