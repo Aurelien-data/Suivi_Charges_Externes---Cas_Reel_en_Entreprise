@@ -1,114 +1,234 @@
-# 💼 Suivi des Charges Externes & Achats MP – PME Industrielle
+💼 Pilotage des Charges Externes & Achats MP
+Cas réel – PME industrielle (Sage 100 → Power BI)
+🎯 Objectif du projet
 
-## 🎯 Objectif du projet
+Concevoir un modèle Power BI fiable permettant :
 
-Mettre en place un outil de pilotage financier fiable sous **Power BI** permettant :
-- le suivi des **charges externes** (comptes 6xx)
-- l’analyse détaillée des **achats de matières premières, approvisionnements et marchandises** (601 / 602 / 607)
-- une restitution cohérente avec les **données comptables Sage 100**
+Le suivi des charges externes (6xx)
 
-L’objectif principal est de garantir une **lecture fidèle des montants comptables**, tout en apportant une capacité d’analyse avancée par catégorie, fournisseur et période.
+L’analyse détaillée des achats MP / approvisionnements (601 / 602 / 607)
 
----
+La restitution cohérente avec les données comptables Sage 100
 
-## 🧠 Contexte & enjeux métier
+Le pilotage N vs N-1 / N-2, à date ou en année complète
 
-Ce projet a été réalisé dans le cadre de la modernisation du pilotage financier d’une **PME industrielle**.
+L’objectif n’était pas uniquement de produire des visualisations, mais de :
 
-### Problématiques initiales :
-- Difficulté à analyser les charges par fournisseur de façon fiable
-- Écarts inexpliqués entre les exports Excel et les états Sage
-- Manque de traçabilité sur certaines écritures comptables complexes
-- Besoin de distinguer les **pièces comptables fiables** des cas atypiques
+🔎 Fiabiliser la donnée comptable avant toute analyse.
 
-Le projet ne se limite pas à la visualisation :
-👉 il vise avant tout la **fiabilisation de la donnée comptable**.
+🧠 Contexte & enjeux métier
 
----
+Projet mené dans le cadre de la modernisation du pilotage financier d’une PME industrielle.
 
-## 🧩 Approche retenue
+Problématiques initiales
 
-### 🔹 Respect strict de la logique Sage
+Difficulté à analyser les charges par fournisseur
 
-Le modèle repose sur la logique suivante, propre à Sage :
-EC PIECE → comptes de charges (6xx) → compte fournisseur (401)
+Incohérences entre exports Excel et états Sage
 
-Le rattachement fournisseur est effectué **exclusivement via les écritures 401**, considérées comme la source de vérité.
+Écritures comptables complexes mal interprétées
 
----
+Rattachements fournisseurs instables
 
-### 🔹 Construction d’une dimension EC PIECE centralisée
+Confusion entre montants “à date” et montants “système complet”
 
-Une **dimension EC PIECE** a été créée afin de :
-- regrouper toutes les écritures d’une même pièce comptable
-- identifier le fournisseur de référence
-- calculer une catégorie d’achat dominante par pièce
-- assurer la cohérence entre charges et fournisseur
+🧩 Évolution majeure du modèle (Version 2)
+🔹 1️⃣ Nouvelle logique de propagation fournisseur par pièce
 
----
+Ancienne logique :
 
-### 🔹 Mise en place de contrôles de fiabilité
+FillDown dépendant de l’ordre des lignes
 
-Des tables de contrôle dédiées ont été intégrées au modèle afin de :
-- détecter les pièces multi-fournisseurs
-- identifier les pièces instables ou atypiques
-- expliquer les exclusions éventuelles des analyses
+Risque d’erreur de rattachement fournisseur
 
-Ces tables ne servent **pas au calcul**, mais à :
-- auditer les données
-- sécuriser les analyses
-- dialoguer avec la DAF / la comptabilité
+Nouvelle logique validée :
 
----
+Groupement par EC_Piece
 
-## 📊 Fonctionnalités clés
+Identification explicite du compte 401
 
-- Suivi des **charges externes** par période, catégorie et compte
-- Analyse détaillée des **achats MP (601 / 602 / 607)** par fournisseur
-- Comparaison N vs N-1 & N-2 (montants et variations)
-- Fiabilité des montants **au centime près** vs Sage et fichiers sources
-- Identification explicite des pièces comptables non fiables
-- Séparation claire entre calculs et contrôles
+Extraction du fournisseur de référence par pièce
 
----
+Propagation contrôlée via Nom_du_Tiers_Final
 
-## ⚙️ Stack technique
+👉 Le fournisseur d’une pièce est désormais :
 
-- **Power BI**
-- **Power Query (M)**  
-  - structuration comptable
-  - logique EC PIECE
-  - contrôles de stabilité
-- **DAX**  
-  - calculs de variations
-  - agrégations multi-niveaux
-- **ODBC / SQL**  
-  - connexion directe à Sage 100
+Unique
 
----
+Traçable
 
-## 🚀 Résultats obtenus
+Indépendant de l’ordre des lignes
 
-- ✔ Concordance parfaite avec les données Sage (au centime)
-- ✔ Fiabilité renforcée du suivi des achats MP
-- ✔ Meilleure compréhension des écarts historiques
-- ✔ Outil exploitable pour le pilotage financier réel
-- ✔ Modèle robuste, explicable et maintenable
+Conforme à la logique Sage
 
----
+🔹 2️⃣ Sécurisation des typages critiques
 
-## 📁 Confidentialité
+Un point bloquant majeur a été identifié :
 
-Les données sources, fichiers Power BI et structures internes ne peuvent être publiés pour des raisons de confidentialité (RGPD & propriété de l’entreprise).
+Date_Analyse était passée en type texte
 
-👉 Ce projet est présenté comme **cas réel de mise en œuvre BI en environnement PME**, avec une forte exigence métier et comptable.
+Rupture complète du contexte temporel
 
----
+Toutes les mesures dépendantes de DIM_DATE retournaient BLANK
 
-## ✅ En résumé
+Correctifs :
 
-Un projet Power BI orienté **fiabilité comptable et pilotage financier**, allant au-delà de la visualisation pour adresser des enjeux réels de gouvernance de la donnée.
+Réapplication stricte des types en Power Query
 
+Validation des relations Date
+
+Contrôle du contexte fiscal
+
+👉 Le modèle est désormais stable face aux évolutions.
+
+🔹 3️⃣ Amélioration du Calculation Group (N / N-1 / N-2)
+
+Nouvelle logique pour l’année fiscale en cours (N) :
+
+Si slicer Mois filtré → calcul à la date sélectionnée
+
+Si slicer Mois défiltré → prise en compte de la dernière date réellement présente dans les écritures
+
+Suppression du simple cutoff basé sur TODAY()
+
+Résultat :
+
+Distinction claire entre :
+
+Montant système complet
+
+Montant YTD piloté
+
+Cohérence parfaite entre :
+
+Carte accueil
+
+Courbe d’évolution
+
+Matrice SIG
+
+🧱 Architecture du modèle
+
+Modèle en étoile structuré autour de :
+
+FACT_F_ECRITUREC (écritures comptables)
+
+DIM_DATE (année fiscale Avril → Mars)
+
+DIM_COMPTES / PCG
+
+Dimensions fournisseurs
+
+Table technique SLICER_MOIS (pilotage temporel via TREATAS)
+
+📊 Fonctionnalités clés
+
+Analyse des charges externes par :
+
+Fournisseur
+
+Catégorie
+
+Compte
+
+Période fiscale
+
+SIG dynamique multi-années fiscales
+
+Comparaison N / N-1 / N-2
+
+Pilotage YTD vs Année complète
+
+Concordance comptable au centime près
+
+Détection des pièces atypiques
+
+🔎 Contrôles & gouvernance
+
+Le modèle intègre :
+
+Vérification de cohérence fournisseur par pièce
+
+Audit des écritures 401
+
+Tables de contrôle non calculatoires
+
+Séparation claire entre :
+
+Données de calcul
+
+Données d’audit
+
+Objectif :
+👉 Garantir un outil exploitable par la DAF.
+
+⚙️ Stack technique
+
+Power BI
+
+Power Query (M)
+
+Regroupement par pièce
+
+Propagation fournisseur robuste
+
+Typage sécurisé
+
+DAX
+
+Calculation Groups
+
+TREATAS
+
+Logique fiscale dynamique
+
+ODBC / SQL
+
+Connexion directe à Sage 100
+
+🚀 Résultats obtenus
+
+✔ Concordance parfaite avec Sage (au centime)
+
+✔ Rattachement fournisseur stabilisé
+
+✔ Distinction claire système vs YTD
+
+✔ SIG fiscal cohérent
+
+✔ Modèle maintenable et explicable
+
+✔ Suppression des dépendances à l’ordre des lignes
+
+📁 Confidentialité
+
+Les données sources et le modèle complet ne peuvent être publiés pour des raisons de confidentialité (RGPD & propriété entreprise).
+
+Ce projet est présenté comme :
+
+Cas réel de fiabilisation comptable et pilotage BI en environnement PME.
+
+🧠 Ce que démontre ce projet
+
+Compréhension approfondie des systèmes comptables Sage
+
+Diagnostic et stabilisation d’un modèle instable
+
+Maîtrise avancée Power Query & DAX
+
+Implémentation de Calculation Groups complexes
+
+Gestion des problématiques de contexte fiscal
+
+Capacité à dialoguer avec une DAF
+
+✅ En résumé
+
+Un projet orienté :
+
+Fiabilité comptable → Gouvernance des données → Pilotage financier réel
+
+Au-delà d’un dashboard, il s’agit d’un modèle décisionnel robuste, aligné sur la réalité du système comptable.
 Un cas concret démontrant :
 - compréhension des systèmes comptables
 - maîtrise de Power BI / Power Query
