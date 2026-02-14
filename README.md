@@ -6,12 +6,18 @@ Cas réel – PME industrielle (Sage 100 → Power BI)
 
 Concevoir un modèle Power BI fiable permettant :
 Le suivi des charges externes (6xx)
+
 L’analyse détaillée des achats MP / approvisionnements (601 / 602 / 607)
+
 La restitution cohérente avec les données comptables Sage 100
+
 Le pilotage N vs N-1 / N-2, à date ou en année complète
+
+---
+
 L’objectif n’était pas uniquement de produire des visualisations, mais de :
 
-🔎 Fiabiliser la donnée comptable avant toute analyse.
+# 🔎 Fiabiliser la donnée comptable avant toute analyse.
 
 🧠 Contexte & enjeux métier
 
