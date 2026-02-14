@@ -1,4 +1,5 @@
 # 💼 Pilotage des Charges Externes & Achats MP
+
 Cas réel – PME industrielle (Sage 100 → Power BI)
 
 # 🎯 Objectif du projet
